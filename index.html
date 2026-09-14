@@ -53,16 +53,25 @@
     --safe-b:env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-variant-numeric:tabular-nums;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  html,body{
+    margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;
+    height:100%; overscroll-behavior:none; overflow-x:hidden;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
   body{
-    min-height:100vh; overscroll-behavior-y:none;
+    min-height:100vh; min-height:100dvh; overscroll-behavior:none;
     background:
       radial-gradient(circle at 10% -6%, rgba(18,181,113,0.10), transparent 42%),
       radial-gradient(circle at 96% 18%, rgba(217,167,59,0.12), transparent 40%),
       var(--bg);
   }
+  button, .tab, .nav-btn, .seg-btn, .fab, .group-header, .cat-picker-chip, .sheet-chip, .month-pill, .download-btn, .add-item-btn, h1, h2, h3, .hero-label, .hero-amount, .stat-card, .cat-breakdown-head, .tx-section-head, .group-name, .group-count, .group-total, label{
+    -webkit-touch-callout:none; -webkit-user-select:none; user-select:none;
+  }
+  button{touch-action:manipulation;}
+  input, select, textarea{-webkit-user-select:text; user-select:text;}
   button{font-family:inherit;}
-  input,select{font-family:inherit;}
+  input,select{font-family:inherit; -webkit-appearance:none; appearance:none;}
 
   .ambient-orb{
     position:fixed; border-radius:50%; filter:blur(50px); z-index:0; pointer-events:none;
@@ -77,7 +86,7 @@
   /* ================= TOP BAR ================= */
   .topbar{
     display:flex; align-items:center; justify-content:space-between;
-    padding:18px 18px 10px;
+    padding:calc(18px + env(safe-area-inset-top, 0px)) 18px 10px;
   }
   .brand{display:flex; align-items:center; gap:9px;}
   .brand .mark{
@@ -101,6 +110,15 @@
     width:22px;height:22px;border-radius:50%;background:var(--gray-soft);
     display:flex;align-items:center;justify-content:center;
   }
+  .topbar-actions{display:flex; align-items:center; gap:8px;}
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%; flex:none; cursor:pointer;
+    background:rgba(255,255,255,0.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.7); color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 14px -8px rgba(27,33,29,0.18);
+  }
+  .icon-btn svg{width:16px;height:16px;}
 
   /* ================= HERO CARD ================= */
   .hero-wrap{padding:6px 18px 0;}
@@ -161,6 +179,42 @@
   }
   .hero-link svg{width:12px;height:12px;}
 
+  /* ================= DUE-SOON BANNER ================= */
+  .due-banner{
+    background:var(--surface); border:1px solid rgba(226,163,43,0.35); border-radius:20px;
+    margin:14px 18px 0; padding:14px 15px;
+    box-shadow:0 1px 2px rgba(27,33,29,0.03), 0 8px 20px -16px rgba(226,163,43,0.4);
+  }
+  .due-banner-head{display:flex; align-items:center; gap:9px;}
+  .due-banner-icon{
+    width:28px; height:28px; border-radius:50%; background:var(--amber-soft); color:var(--amber-dark);
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .due-banner-icon svg{width:14px;height:14px;}
+  .due-banner-title{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:12.5px; color:var(--ink); flex:1;}
+  .due-notif-btn{
+    width:30px; height:30px; border-radius:50%; border:1px solid var(--line); background:var(--surface);
+    display:flex; align-items:center; justify-content:center; color:var(--ink-soft); cursor:pointer; flex:none;
+  }
+  .due-notif-btn svg{width:14px;height:14px;}
+  .due-notif-btn.on{background:var(--green-soft); color:var(--green-dark); border-color:var(--green);}
+  .due-list{display:flex; flex-direction:column; gap:7px; margin-top:11px;}
+  .due-item{
+    display:flex; align-items:center; gap:8px; background:var(--surface-2); border:none; border-radius:12px;
+    padding:9px 11px; cursor:pointer; text-align:left; width:100%;
+  }
+  .due-item-name{
+    font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:12px; color:var(--ink); flex:1;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .due-item-when{
+    font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.02em;
+    padding:3px 7px; border-radius:999px; background:var(--amber-soft); color:var(--amber-dark); white-space:nowrap; flex:none;
+  }
+  .due-item-when.overdue, .due-item-when.urgent{background:var(--red-soft); color:var(--red-dark);}
+  .due-item-value{font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:11px; color:var(--ink); white-space:nowrap; flex:none;}
+  .due-more{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-faint); text-align:center; padding-top:2px;}
+
   /* ================= SEGMENTED CONTROL ================= */
   .segmented{
     display:flex; gap:4px; margin:16px 18px 0;
@@ -217,6 +271,9 @@
   }
   input.tx-date:focus{outline:none; border-color:var(--green);}
   input[type="date"].tx-date{position:relative;}
+  input[type="date"].tx-date::-webkit-calendar-picker-indicator{
+    position:absolute; left:0; top:0; width:100%; height:100%; margin:0; padding:0; opacity:0; cursor:pointer;
+  }
   .date-wrap{position:relative; display:inline-flex; align-items:center;}
   .date-wrap svg{
     position:absolute; left:8px; width:12px; height:12px; color:var(--ink-faint); pointer-events:none;
@@ -240,6 +297,9 @@
     font-weight:700; font-size:14.5px; width:90px; padding:2px 0; border-radius:5px;
   }
   input.tx-value:focus{outline:none; background:var(--surface-2);}
+  input.tx-name:focus, input.tx-date:focus, input.tx-value:focus, select.tx-status:focus, select.tx-group:focus{
+    font-size:16px !important;
+  }
   .tx-list.income input.tx-value{color:var(--green-dark);}
   .tx-list.expense input.tx-value{color:var(--red-dark);}
   .tx-list.investment input.tx-value{color:var(--invest-dark);}
@@ -447,7 +507,7 @@
   }
   .chart-legend .sw{width:9px; height:9px; border-radius:3px;}
   .chart-legend .ln{width:14px; height:2px; border-radius:2px; background:var(--gold);}
-  .chart-wrap{width:100%; overflow-x:auto; padding-bottom:4px;}
+  .chart-wrap{width:100%; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch;}
   .chart-wrap svg{display:block; min-width:640px; width:100%; height:auto;}
   .bar-income{fill:url(#gradIncome);}
   .bar-expense{fill:url(#gradExpense);}
@@ -457,7 +517,7 @@
   .chart-month-label{font-family:'IBM Plex Mono',monospace; font-size:10px; fill:var(--ink-faint);}
   .chart-zero{stroke:var(--ink); stroke-width:1; opacity:.35;}
 
-  .mini-table-wrap{overflow-x:auto; border-radius:14px;}
+  .mini-table-wrap{overflow-x:auto; border-radius:14px; -webkit-overflow-scrolling:touch;}
   .month-mini-table{width:100%; min-width:420px; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:11px;}
   .month-mini-table th{text-align:right; font-size:8.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); padding:0 6px 8px; border-bottom:1px solid var(--line);}
   .month-mini-table th:first-child, .month-mini-table td:first-child{text-align:left;}
@@ -481,7 +541,7 @@
     border:1px solid rgba(255,255,255,0.6); border-bottom:none;
     border-radius:28px 28px 0 0; padding:10px 20px calc(22px + var(--safe-b));
     transform:translateY(105%); transition:transform .26s cubic-bezier(.32,.72,0,1); z-index:51;
-    box-shadow:0 -24px 55px -20px rgba(0,0,0,0.35); max-height:78vh; overflow-y:auto;
+    box-shadow:0 -24px 55px -20px rgba(0,0,0,0.35); max-height:78vh; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
   }
   .sheet.open{transform:translateY(0);}
   .sheet-handle{width:38px; height:4px; background:var(--line); border-radius:99px; margin:2px auto 14px;}
@@ -528,6 +588,61 @@
   .cat-picker-icon svg{width:16px;height:16px;}
   .cat-picker-name{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:12.5px; color:#fff; position:relative; text-align:center;}
 
+  /* ================= TOAST ================= */
+  #toast-root{
+    position:fixed; left:0; right:0; bottom:calc(96px + var(--safe-b)); z-index:80;
+    display:flex; flex-direction:column; align-items:center; gap:8px; pointer-events:none; padding:0 20px;
+  }
+  .toast{
+    max-width:400px; width:100%; background:var(--ink); color:#fff; border-radius:14px; padding:12px 16px;
+    font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; font-weight:600; text-align:center;
+    box-shadow:0 12px 24px -12px rgba(0,0,0,0.4);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    opacity:0; transform:translateY(10px); transition:opacity .25s ease, transform .25s ease;
+  }
+  .toast.show{opacity:1; transform:translateY(0);}
+  .toast.error{background:var(--red-dark);}
+  .toast svg{width:14px;height:14px; flex:none;}
+
+  /* ================= BACKUP SHEET ================= */
+  .backup-intro{font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 18px;}
+  .backup-status{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--green-dark); background:var(--green-soft);
+    border-radius:10px; padding:8px 12px; margin-bottom:16px; display:flex; align-items:center; gap:7px;
+  }
+  .backup-status svg{width:13px;height:13px; flex:none;}
+  .backup-btn{
+    width:100%; padding:14px; border-radius:16px; border:none; cursor:pointer; margin-bottom:10px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600;
+  }
+  .backup-btn svg{width:15px;height:15px;}
+  .backup-btn.primary{
+    background:linear-gradient(135deg, var(--green-vivid), var(--green-dark)); color:#fff;
+    box-shadow:0 10px 20px -12px rgba(11,94,60,0.5);
+  }
+  .backup-btn.secondary{
+    background:var(--surface-2); color:var(--ink); border:1.5px solid var(--line);
+  }
+  .backup-btn[disabled]{opacity:.6; pointer-events:none;}
+  .sync-divider{
+    display:flex; align-items:center; gap:10px; margin:22px 0 14px; color:var(--ink-faint);
+    font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+  }
+  .sync-divider::before, .sync-divider::after{content:""; flex:1; height:1px; background:var(--line);}
+  .sync-status{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; border-radius:10px; padding:8px 12px; margin-bottom:12px;
+    display:flex; align-items:center; gap:7px; background:var(--gray-soft); color:var(--ink-soft);
+  }
+  .sync-status svg{width:13px;height:13px; flex:none;}
+  .sync-status.synced{background:var(--green-soft); color:var(--green-dark);}
+  .sync-status.error{background:var(--red-soft); color:var(--red-dark);}
+  .sync-key-input{
+    width:100%; padding:13px 14px; border-radius:14px; border:1.5px solid var(--line); background:var(--surface-2);
+    font-family:'IBM Plex Mono',monospace; font-size:16px; color:var(--ink); margin-bottom:10px;
+  }
+  .sync-key-input:focus{outline:none; border-color:var(--green);}
+
   @media (min-width:461px){
     body{padding:24px 0;}
     .shell{border-radius:28px; box-shadow:0 30px 60px -30px rgba(27,33,29,0.35); overflow:hidden; border:1px solid var(--line);}
@@ -544,9 +659,15 @@
 <div class="sheet-backdrop" id="sheet-backdrop"></div>
 <div class="sheet" id="month-sheet"></div>
 <div class="sheet" id="category-sheet"></div>
+<div class="sheet" id="backup-sheet"></div>
+<input type="file" id="import-file-input" accept="application/json" style="display:none;">
+<div id="toast-root"></div>
 
 <script>
 const STORAGE_KEY = 'controle-financeiro-v1';
+const SUPABASE_URL = 'https://ukynsahfolctpkfhnzfc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVreW5zYWhmb2xjdHBrZmhuemZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MTY1NjYsImV4cCI6MjEwNDk5MjU2Nn0.8KVbhq_cob2SV0LLGVnX6dsTeukq2QOHMArZfIQrw68';
+const SYNC_KEY_STORAGE_NAME = 'meu-financeiro-sync-key';
 
 const GROUP_COLORS = ['accent1','accent2','accent3','accent4','accent5','accent6','green','red','amber'];
 function colorForName(name){
@@ -804,6 +925,15 @@ function fmt(n){
   return n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
+function parseValueInput(str){
+  if (!str) return 0;
+  let s = String(str).replace(/[^\d,.\-]/g, '');
+  if (s.includes(',') && s.includes('.')) s = s.replace(/\./g, '').replace(',', '.');
+  else if (s.includes(',')) s = s.replace(',', '.');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
 function statusClass(s){
   s = (s||'').toUpperCase();
   if (s === 'APLICADO') return 'st-aplicado';
@@ -888,6 +1018,32 @@ function monthTotals(m){
   return {inc, exp, inv, res: inc-exp};
 }
 
+const DUE_SOON_DAYS = 5;
+function getDueSoonItems(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const results = [];
+  Object.keys(DATA.months).forEach(mKey=>{
+    (DATA.months[mKey].expense||[]).forEach(item=>{
+      if (!item.vencimento) return;
+      if ((item.status||'').toUpperCase()==='PAGO') return;
+      const d = new Date(item.vencimento+'T00:00:00');
+      if (isNaN(d.getTime())) return;
+      const diffDays = Math.round((d - today)/86400000);
+      if (diffDays <= DUE_SOON_DAYS){
+        results.push({ id:item.id, name:item.name, value:item.value, status:item.status, vencimento:item.vencimento, group:item.group, monthKey:mKey, diffDays });
+      }
+    });
+  });
+  results.sort((a,b)=>a.diffDays-b.diffDays);
+  return results;
+}
+function dueLabel(diffDays){
+  if (diffDays < 0) return `Venceu há ${Math.abs(diffDays)} dia${Math.abs(diffDays)===1?'':'s'}`;
+  if (diffDays === 0) return 'Vence hoje';
+  if (diffDays === 1) return 'Vence amanhã';
+  return `Vence em ${diffDays} dias`;
+}
+
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -908,11 +1064,222 @@ const ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 const ICON_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
 const ICON_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>';
 const ICON_TREND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/></svg>';
+const ICON_BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';
+const ICON_BELL_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.7 3.7A6 6 0 0 1 18 8c0 3.3.7 5.5 1.4 6.9M17.6 17H21s-3-2-3-9c0-.4 0-.8-.1-1.2M13.7 21a2 2 0 0 1-3.4 0"/><path d="M3 3l18 18"/><path d="M6.3 6.3C6 7 6 7.9 6 8c0 7-3 9-3 9h13.7"/></svg>';
+const ICON_GEAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4.2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9.6a1.7 1.7 0 0 0 1-1.6V4.2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.6 1H19.8a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1Z"/></svg>';
+const ICON_UPLOAD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4.5 4.5M12 4 7.5 8.5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>';
+const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const ICON_ALERT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M10.3 3.9 2.5 17a1.8 1.8 0 0 0 1.5 2.7h16a1.8 1.8 0 0 0 1.5-2.7L13.7 3.9a1.8 1.8 0 0 0-3.4 0Z"/><circle cx="12" cy="16.3" r="0.6" fill="currentColor"/></svg>';
 const ICON_DOWNLOAD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0-4.5-4.5M12 16l4.5-4.5"/><path d="M4 18v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>';
 
+let lastSavedAt = null;
 async function saveData(){
-  try{ await storageSet(STORAGE_KEY, JSON.stringify(DATA)); }
-  catch(e){ console.error('Falha ao salvar', e); }
+  try{
+    const ok = await storageSet(STORAGE_KEY, JSON.stringify(DATA));
+    if (ok){ lastSavedAt = new Date(); }
+    else { showToast('Não foi possível salvar neste navegador.', 'error'); }
+  }catch(e){
+    console.error('Falha ao salvar', e);
+    showToast('Não foi possível salvar neste navegador.', 'error');
+  }
+  scheduleCloudPush();
+}
+
+// ============== CLOUD SYNC (Supabase) ==============
+let cloudSyncStatus = 'idle'; // idle | syncing | synced | error
+let cloudPushTimer = null;
+
+function getSyncKey(){
+  try{ return localStorage.getItem(SYNC_KEY_STORAGE_NAME) || ''; }catch(e){ return ''; }
+}
+function setSyncKey(key){
+  try{ localStorage.setItem(SYNC_KEY_STORAGE_NAME, key); }catch(e){}
+}
+function clearSyncKey(){
+  try{ localStorage.removeItem(SYNC_KEY_STORAGE_NAME); }catch(e){}
+}
+
+async function cloudPull(key){
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/financeiro_dados?chave=eq.${encodeURIComponent(key)}&select=dados`, {
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+  });
+  if (!res.ok){
+    let detail = '';
+    try{ const j = await res.json(); detail = j.message || j.hint || ''; }catch(e){}
+    throw new Error(`${res.status}${detail ? ' — '+detail : ''}`);
+  }
+  const rows = await res.json();
+  return (rows && rows.length>0) ? rows[0].dados : null;
+}
+
+async function cloudPush(key, dataObj){
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/financeiro_dados`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify([{ chave: key, dados: dataObj, atualizado_em: new Date().toISOString() }])
+  });
+  if (!res.ok){
+    let detail = '';
+    try{ const j = await res.json(); detail = j.message || j.hint || ''; }catch(e){}
+    throw new Error(`${res.status}${detail ? ' — '+detail : ''}`);
+  }
+}
+
+function scheduleCloudPush(){
+  const key = getSyncKey();
+  if (!key) return;
+  clearTimeout(cloudPushTimer);
+  cloudPushTimer = setTimeout(async ()=>{
+    cloudSyncStatus = 'syncing';
+    try{
+      await cloudPush(key, DATA);
+      cloudSyncStatus = 'synced';
+    }catch(e){
+      cloudSyncStatus = 'error';
+      showToast('Erro ao sincronizar: ' + e.message, 'error');
+    }
+  }, 1200);
+}
+
+async function connectCloudSync(key, onDone){
+  cloudSyncStatus = 'syncing';
+  try{
+    const cloudData = await cloudPull(key);
+    if (cloudData && cloudData.months){
+      const useCloud = confirm('Encontramos dados salvos na nuvem para essa chave. Toque OK para carregar esses dados (substituindo o que está aqui agora), ou Cancelar para manter os dados deste aparelho e enviá-los para a nuvem.');
+      if (useCloud){
+        DATA = cloudData;
+        migrateData();
+        setSyncKey(key);
+        await saveData();
+        await cloudPush(key, DATA);
+        render();
+        cloudSyncStatus = 'synced';
+        onDone(true, 'Dados da nuvem carregados com sucesso.');
+        return;
+      }
+    }
+    setSyncKey(key);
+    await cloudPush(key, DATA);
+    cloudSyncStatus = 'synced';
+    onDone(true, 'Sincronização ativada. Seus dados já estão na nuvem.');
+  }catch(e){
+    cloudSyncStatus = 'error';
+    onDone(false, 'Erro do Supabase: ' + e.message);
+  }
+}
+
+async function tryInitialCloudPull(){
+  const key = getSyncKey();
+  if (!key) return;
+  try{
+    const cloudData = await cloudPull(key);
+    if (cloudData && cloudData.months){
+      DATA = cloudData;
+      migrateData();
+      cloudSyncStatus = 'synced';
+    }
+  }catch(e){
+    cloudSyncStatus = 'error';
+  }
+}
+
+function showToast(message, type){
+  const root = document.getElementById('toast-root');
+  if (!root) return;
+  const el = document.createElement('div');
+  el.className = 'toast' + (type==='error' ? ' error' : '');
+  el.innerHTML = (type==='error' ? '' : ICON_CHECK) + '<span>'+escapeHtml(message)+'</span>';
+  root.appendChild(el);
+  requestAnimationFrame(()=> el.classList.add('show'));
+  setTimeout(()=>{
+    el.classList.remove('show');
+    setTimeout(()=> el.remove(), 300);
+  }, 3200);
+}
+
+function renderBackupSheet(){
+  const sheet = document.getElementById('backup-sheet');
+  const savedLabel = lastSavedAt
+    ? 'Salvo agora há pouco, neste navegador'
+    : 'Ainda não foi possível confirmar o salvamento';
+  const syncKey = getSyncKey();
+  const syncStatusLabel = {
+    idle: 'Nenhuma sincronização ativa',
+    syncing: 'Sincronizando…',
+    synced: 'Sincronizado com a nuvem',
+    error: 'Não foi possível sincronizar',
+  }[cloudSyncStatus] || 'Nenhuma sincronização ativa';
+  sheet.innerHTML = `
+    <div class="sheet-handle"></div>
+    <h3>Dados e backup</h3>
+    <p class="backup-intro">
+      Tudo que você digita é salvo automaticamente neste navegador, a cada alteração.
+      Mas se você trocar de aparelho, limpar os dados do navegador ou abrir uma versão
+      nova deste app, esse salvamento local não acompanha — por isso vale baixar um
+      backup de vez em quando, ou ativar a sincronização na nuvem abaixo.
+    </p>
+    <div class="backup-status">${ICON_CHECK}${savedLabel}</div>
+    <button class="backup-btn primary" id="backup-export-btn">${ICON_DOWNLOAD} Baixar backup (.json)</button>
+    <button class="backup-btn secondary" id="backup-import-btn">${ICON_UPLOAD} Restaurar backup</button>
+
+    <div class="sync-divider"><span>Sincronização na nuvem</span></div>
+    <p class="backup-intro">
+      Digite uma chave pessoal (uma palavra só sua) e ative a sincronização. Em qualquer
+      aparelho ou versão nova do app, basta digitar a mesma chave para ver os mesmos dados.
+    </p>
+    <div class="sync-status ${cloudSyncStatus}">${cloudSyncStatus==='synced'?ICON_CHECK:ICON_ALERT}${syncStatusLabel}</div>
+    <input type="text" id="sync-key-input" class="sync-key-input" placeholder="ex: wilson2026" value="${escapeHtml(syncKey)}">
+    <button class="backup-btn primary" id="sync-connect-btn">${ICON_TREND} ${syncKey ? 'Reconectar' : 'Ativar sincronização'}</button>
+    ${syncKey ? `<button class="backup-btn secondary" id="sync-disconnect-btn">Desativar sincronização</button>` : ''}
+  `;
+}
+function openBackupSheet(){
+  renderBackupSheet();
+  backupSheetOpen = true;
+  document.getElementById('sheet-backdrop').classList.add('open');
+  document.getElementById('backup-sheet').classList.add('open');
+}
+function closeBackupSheet(){
+  backupSheetOpen = false;
+  document.getElementById('backup-sheet').classList.remove('open');
+  if (!sheetOpen && !categorySheetOpen) document.getElementById('sheet-backdrop').classList.remove('open');
+}
+
+function exportBackup(){
+  const blob = new Blob([JSON.stringify(DATA, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `backup-meu-financeiro-${dateStr}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  showToast('Backup baixado com sucesso.');
+}
+
+function importBackupFile(file){
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    try{
+      const parsed = JSON.parse(reader.result);
+      if (!parsed || typeof parsed !== 'object' || !parsed.months || !parsed.order){
+        showToast('Esse arquivo não parece ser um backup válido.', 'error');
+        return;
+      }
+      DATA = parsed;
+      migrateData();
+      await saveData();
+      closeBackupSheet();
+      render();
+      showToast('Backup restaurado com sucesso.');
+    }catch(e){
+      showToast('Não foi possível ler esse arquivo.', 'error');
+    }
+  };
+  reader.readAsText(file);
 }
 
 function findRow(kind, id){
@@ -927,7 +1294,10 @@ function render(){
   app.innerHTML = `
     <div class="topbar">
       <div class="brand"><span class="mark">${ICON_WALLET}</span><span class="name">Meu Financeiro</span></div>
-      <button class="month-pill" id="open-month-sheet">${monthLabel(DATA.current).slice(0,3)} ${yearOf(DATA.current)} <span class="chev">${ICON_CHEV}</span></button>
+      <div class="topbar-actions">
+        <button class="month-pill" id="open-month-sheet">${monthLabel(DATA.current).slice(0,3)} ${yearOf(DATA.current)} <span class="chev">${ICON_CHEV}</span></button>
+        <button class="icon-btn" id="open-backup-sheet" title="Dados e backup">${ICON_GEAR}</button>
+      </div>
     </div>
     <div id="view-root"></div>
   `;
@@ -966,7 +1336,7 @@ function renderTxRow(r, cfg, showGroup){
         </div>
       </div>
       <div class="tx-right">
-        <input class="tx-value" data-field="value" type="number" step="0.01" value="${r.value===0?'':r.value}" placeholder="0,00">
+        <input class="tx-value" data-field="value" type="text" inputmode="decimal" value="${r.value===0?'':String(r.value).replace('.',',')}" placeholder="0,00">
         <button class="tx-del" data-del="${r.id}">${ICON_TRASH}</button>
       </div>
     </div>
@@ -1004,12 +1374,69 @@ function renderTxList(rows, cfg){
   }).join('');
 }
 
+function renderDueBanner(items){
+  if (!items || items.length===0) return '';
+  const notifSupported = (typeof Notification !== 'undefined');
+  const notifGranted = notifSupported && Notification.permission === 'granted';
+  const notifDenied = notifSupported && Notification.permission === 'denied';
+  const showItems = items.slice(0,3);
+  const extra = items.length - showItems.length;
+  return `
+    <div class="due-banner">
+      <div class="due-banner-head">
+        <span class="due-banner-icon">${ICON_ALERT}</span>
+        <span class="due-banner-title">${items.length} conta${items.length===1?'':'s'} vencendo</span>
+        ${notifSupported && !notifDenied ? `
+          <button class="due-notif-btn ${notifGranted?'on':''}" id="due-notif-toggle" title="${notifGranted?'Avisos ativados':'Ativar avisos do navegador'}">
+            ${notifGranted?ICON_BELL:ICON_BELL_OFF}
+          </button>` : ''}
+      </div>
+      <div class="due-list">
+        ${showItems.map(it=>`
+          <button class="due-item" data-due-month="${it.monthKey}" data-due-group="${it.group||''}">
+            <span class="due-item-name">${escapeHtml(it.name)}</span>
+            <span class="due-item-when ${it.diffDays<0?'overdue':(it.diffDays<=1?'urgent':'')}">${dueLabel(it.diffDays)}</span>
+            <span class="due-item-value">R$ ${fmt(it.value)}</span>
+          </button>
+        `).join('')}
+        ${extra>0?`<div class="due-more">+${extra} outra${extra===1?'':'s'}</div>`:''}
+      </div>
+    </div>
+  `;
+}
+
+function requestDueNotifications(){
+  if (typeof Notification === 'undefined') return;
+  if (Notification.permission === 'default'){
+    Notification.requestPermission().then(()=>{ fireDueNotificationIfNeeded(true); render(); });
+  } else if (Notification.permission === 'granted'){
+    fireDueNotificationIfNeeded(true);
+  }
+}
+
+function fireDueNotificationIfNeeded(force){
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  const items = getDueSoonItems();
+  if (items.length===0) return;
+  const todayStr = new Date().toISOString().slice(0,10);
+  if (!force && DATA.lastNotifiedDate === todayStr) return;
+  try{
+    const first = items[0];
+    const title = items.length===1 ? `${items[0].name} — ${dueLabel(items[0].diffDays).toLowerCase()}` : `${items.length} contas vencendo`;
+    const body = items.slice(0,3).map(it=>`${it.name}: R$ ${fmt(it.value)} · ${dueLabel(it.diffDays)}`).join('\n');
+    new Notification(title, { body, tag:'due-bills' });
+    DATA.lastNotifiedDate = todayStr;
+    saveData();
+  }catch(e){ /* Notification constructor unsupported in this context (e.g. iOS PWA) — the in-app banner still covers it */ }
+}
+
 function renderMonthView(){
   const root = document.getElementById('view-root');
   const tot = monthTotals(DATA.current);
   const cfg = SEGMENT_CONFIG[segment];
   const rows = DATA.months[DATA.current][segment];
   const total = rows.reduce((s,r)=>s+(Number(r.value)||0),0);
+  const dueSoon = getDueSoonItems();
 
   root.innerHTML = `
     <div class="hero-wrap">
@@ -1029,6 +1456,8 @@ function renderMonthView(){
         <button class="hero-link" id="open-annual-summary">Ver resumo do ano ${ICON_CHEV_R}</button>
       </div>
     </div>
+
+    ${renderDueBanner(dueSoon)}
 
     <div class="segmented">
       <button class="seg-btn income ${segment==='income'?'active income':''}" data-seg="income">${ICON_UP} Ganhos</button>
@@ -1813,8 +2242,8 @@ function openSheet(){
 }
 function closeSheet(){
   sheetOpen = false;
-  document.getElementById('sheet-backdrop').classList.remove('open');
   document.getElementById('month-sheet').classList.remove('open');
+  if (!categorySheetOpen && !backupSheetOpen) document.getElementById('sheet-backdrop').classList.remove('open');
 }
 
 let categorySheetOpen = false;
@@ -1846,12 +2275,15 @@ function openCategorySheet(){
 function closeCategorySheet(){
   categorySheetOpen = false;
   document.getElementById('category-sheet').classList.remove('open');
-  if (!sheetOpen) document.getElementById('sheet-backdrop').classList.remove('open');
+  if (!sheetOpen && !backupSheetOpen) document.getElementById('sheet-backdrop').classList.remove('open');
 }
 function closeAnySheet(){
   if (sheetOpen) closeSheet();
   if (categorySheetOpen) closeCategorySheet();
+  if (backupSheetOpen) closeBackupSheet();
 }
+
+let backupSheetOpen = false;
 
 const BLANK_NAME = { income:'Nova entrada', expense:'Nova saída', investment:'Novo aporte' };
 const BLANK_STATUS = { income:'RECEBIDO', expense:'PAGO', investment:'APLICADO' };
@@ -1898,7 +2330,7 @@ function wireGlobalEvents(){
     const item = findRow(segment, row.dataset.id);
     if (!item) return;
     const field = el.dataset.field;
-    item[field] = field==='value' ? (parseFloat(el.value)||0) : el.value;
+    item[field] = field==='value' ? parseValueInput(el.value) : el.value;
     if (field==='value') updateHeroAndTotal();
     if (field==='name'){
       const icon = row.querySelector('.tx-icon');
@@ -1931,6 +2363,20 @@ function wireGlobalEvents(){
     const seg = t.closest('[data-seg]');
     if (seg){ segment = seg.dataset.seg; renderMonthView(); return; }
 
+    const notifBtn = t.closest('#due-notif-toggle');
+    if (notifBtn){ requestDueNotifications(); return; }
+
+    const dueItem = t.closest('[data-due-month]');
+    if (dueItem){
+      DATA.current = dueItem.dataset.dueMonth;
+      segment = 'expense';
+      const g = dueItem.dataset.dueGroup;
+      if (g) collapsedGroups.delete('expense::'+g);
+      saveData();
+      render();
+      return;
+    }
+
     const groupToggle = t.closest('[data-toggle-group]');
     if (groupToggle){
       const g = groupToggle.dataset.toggleGroup;
@@ -1940,6 +2386,8 @@ function wireGlobalEvents(){
     }
 
     if (t.id === 'open-month-sheet' || t.closest('#open-month-sheet')){ openSheet(); return; }
+
+    if (t.id === 'open-backup-sheet' || t.closest('#open-backup-sheet')){ openBackupSheet(); return; }
 
     if (t.id === 'open-annual-summary' || t.closest('#open-annual-summary')){
       DATA.view = 'chart';
@@ -2020,6 +2468,44 @@ function wireGlobalEvents(){
     }
   };
 
+  const backupSheet = document.getElementById('backup-sheet');
+  backupSheet.onclick = (e)=>{
+    const t = e.target;
+    if (t.id === 'backup-export-btn' || t.closest('#backup-export-btn')){
+      exportBackup();
+      return;
+    }
+    if (t.id === 'backup-import-btn' || t.closest('#backup-import-btn')){
+      document.getElementById('import-file-input').click();
+      return;
+    }
+    if (t.id === 'sync-connect-btn' || t.closest('#sync-connect-btn')){
+      const input = document.getElementById('sync-key-input');
+      const key = (input.value||'').trim();
+      if (!key){ showToast('Digite uma chave antes de ativar.', 'error'); return; }
+      const btn = t.closest('#sync-connect-btn') || t;
+      btn.setAttribute('disabled','');
+      connectCloudSync(key, (ok, msg)=>{
+        btn.removeAttribute('disabled');
+        showToast(msg, ok ? undefined : 'error');
+        renderBackupSheet();
+      });
+      return;
+    }
+    if (t.id === 'sync-disconnect-btn' || t.closest('#sync-disconnect-btn')){
+      clearSyncKey();
+      cloudSyncStatus = 'idle';
+      showToast('Sincronização desativada neste aparelho.');
+      renderBackupSheet();
+      return;
+    }
+  };
+  document.getElementById('import-file-input').onchange = (e)=>{
+    const file = e.target.files && e.target.files[0];
+    if (file) importBackupFile(file);
+    e.target.value = '';
+  };
+
   const sheet = document.getElementById('month-sheet');
   sheet.onclick = (e)=>{
     const t = e.target;
@@ -2077,8 +2563,16 @@ function wireGlobalEvents(){
 
 (async function init(){
   document.getElementById('app').innerHTML = '<p style="text-align:center;padding:100px 20px;font-family:IBM Plex Mono, monospace;color:#A29C86;letter-spacing:.05em;font-size:12px;">carregando...</p>';
+  document.getElementById('app').addEventListener('focusin', (e)=>{
+    if (e.target.classList && e.target.classList.contains('tx-value')){
+      const el = e.target;
+      setTimeout(()=>{ el.select(); }, 0);
+    }
+  });
   await loadData();
+  await tryInitialCloudPull();
   render();
+  fireDueNotificationIfNeeded(false);
 })();
 </script>
 </body>
